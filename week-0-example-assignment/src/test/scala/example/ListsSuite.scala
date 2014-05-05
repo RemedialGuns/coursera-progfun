@@ -122,6 +122,14 @@ class ListsSuite extends FunSuite {
     assert(max(List(3, 7, 2)) === 7)
   }
 
+  test("max of a few numbers, largest first") {
+    assert(max(List(7, 2, 3)) === 7)
+  }
+
+  test("max of a few numbers, largest last") {
+    assert(max(List(2, 3, 7)) === 7)
+  }
+
   test("max throws an exception if its argument is an empty list") {
     intercept[NoSuchElementException] {
       max(List())

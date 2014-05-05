@@ -48,7 +48,7 @@ object Lists {
    * @param xs A list of natural numbers, may be an empty list
    * @return `x` or the largest element in `xs`, whichever is larger
    */
-  def max(x: Int, xs: List[Int]): Int = if (xs.isEmpty) x else max(xs.head, max(xs.head, xs.tail))
+  def max(x: Int, xs: List[Int]): Int = if (xs.isEmpty) x else max(x, max(xs.head, xs.tail))
 
   /**
    * Compares two integers and returns the larger of the two.
