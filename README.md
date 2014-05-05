@@ -7,7 +7,9 @@ Coursera.
 Course Syllabus
 ---------------
 
-- [ ] **Week 0:** Getting started; example assignment
+*Completed assignments received a perfect grade unless noted otherwise.*
+
+- [x] **Week 0:** Getting started; example assignment
 - [ ] **Week 1:** Programming paradigms; overview of functional programming and the Scala
  programming language
 - [ ] **Week 2:** Defining and using functions, recursion and non-termination, working with
