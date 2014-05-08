@@ -47,30 +47,30 @@ class FunSetSuite extends FunSuite {
     assert(1 + 2 === 3)
   }
 
-  
+
   import FunSets._
 
   test("contains is implemented") {
     assert(contains(x => true, 100))
   }
-  
+
   /**
    * When writing tests, one would often like to re-use certain values for multiple
    * tests. For instance, we would like to create an Int-set and have multiple test
    * about it.
-   * 
+   *
    * Instead of copy-pasting the code for creating the set into every test, we can
    * store it in the test class using a val:
-   * 
+   *
    *   val s1 = singletonSet(1)
-   * 
+   *
    * However, what happens if the method "singletonSet" has a bug and crashes? Then
    * the test methods are not even executed, because creating an instance of the
    * test class fails!
-   * 
+   *
    * Therefore, we put the shared values into a separate trait (traits are like
    * abstract classes), and create an instance inside each test method.
-   * 
+   *
    */
 
   trait TestSets {
@@ -82,12 +82,12 @@ class FunSetSuite extends FunSuite {
   /**
    * This test is currently disabled (by using "ignore") because the method
    * "singletonSet" is not yet implemented and the test would fail.
-   * 
+   *
    * Once you finish your implementation of "singletonSet", exchange the
    * function "ignore" by "test".
    */
-  ignore("singletonSet(1) contains 1") {
-    
+  test("singletonSet(1) contains 1") {
+
     /**
      * We create a new instance of the "TestSets" trait, this gives us access
      * to the values "s1" to "s3". 
@@ -101,12 +101,119 @@ class FunSetSuite extends FunSuite {
     }
   }
 
-  ignore("union contains all elements") {
+  test("singletonSet(1) does not contain 0") {
+    new TestSets {
+      assert(!contains(s1, 0))
+    }
+  }
+
+  test("singletonSet(1) does not contain 2") {
+    new TestSets {
+      assert(!contains(s1, 2))
+    }
+  }
+
+  test("union contains expected elements") {
     new TestSets {
       val s = union(s1, s2)
       assert(contains(s, 1), "Union 1")
       assert(contains(s, 2), "Union 2")
       assert(!contains(s, 3), "Union 3")
+    }
+  }
+
+  test("intersect contains expected elements") {
+    new TestSets {
+      {
+        val s = intersect(s1, s1)
+        assert(contains(s, 1))
+        assert(!contains(s, 2))
+      }
+
+      {
+        val s = intersect(s1, s2)
+        assert(!contains(s, 1))
+        assert(!contains(s, 2))
+      }
+    }
+  }
+
+  test("diff contains expected elements") {
+    new TestSets {
+      {
+        val s = diff(s1, s1)
+        assert(!contains(s, 1))
+      }
+
+      {
+        val s = diff(s1, s2)
+        assert(contains(s, 1))
+        assert(!contains(s, 2))
+      }
+    }
+  }
+
+  test("filter only selects expected elements") {
+    new TestSets {
+      {
+        val s = filter(union(s1, s2), x => true)
+        assert(contains(s, 1))
+        assert(contains(s, 2))
+      }
+
+      {
+        val s = filter(union(s1, s2), x => false)
+        assert(!contains(s, 1))
+        assert(!contains(s, 2))
+      }
+
+      {
+        val s = filter(union(s1, s2), x => x == 2)
+        assert(!contains(s, 1))
+        assert(contains(s, 2))
+      }
+    }
+  }
+
+  test("forall is true when the predicate matches elements") {
+    new TestSets {
+      val s = union(s1, s2)
+      assert(forall(s, x => true))
+      assert(forall(s, x => x < 3))
+    }
+  }
+
+  test("forall is false when the predicate does not match elements") {
+    new TestSets {
+      val s = union(s1, s2)
+      assert(!forall(s, x => false))
+      assert(!forall(s, x => x < 2))
+    }
+  }
+
+  test("exists is true when the predicate matches some elements") {
+    new TestSets {
+      val s = union(s1, s2)
+      assert(exists(s, x => true))
+      assert(exists(s, x => x == 1))
+    }
+  }
+
+  test("exists is false when the predicate matches no elements") {
+    new TestSets {
+      val s = union(s1, s2)
+      assert(!exists(s, x => false))
+      assert(!exists(s, x => x == 3))
+    }
+  }
+
+  test("map applies transformations to elements") {
+    new TestSets {
+      val s = map(union(s1, s2), x => x + 3)
+      assert(!contains(s, 1))
+      assert(!contains(s, 2))
+      assert(contains(s, 4))
+      assert(contains(s, 5))
     }
   }
 }
